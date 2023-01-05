@@ -6,13 +6,6 @@
 
 
 
-
-
-
-
-
-
-
 //리턴 값이 없으면 undefined가 반환됨 js에서는
 //but ts에서는 void가 반환 됨
 
@@ -179,7 +172,7 @@ const neo : User = {
 //interface의 경우 이름이 있으므로 재활용이 가능
 
 interface GetName {
-  (message: string): string //함수
+  (message: string): string //함수 => 소괄호 (호출 시그니처)
 }
 interface User2 {
   name: string
@@ -198,5 +191,227 @@ const heropy2: User2 = {
 }
 //getName의 this 정의 됨 그러므로 this는 heropy라는 객체데이터가 됨
 heropy2.getName("Hello")
+
+
+//interface 인덱스 가능 타입 - 인덱스 시그니처 (Index Signatrue)
+
+//배열
+interface Fruits {
+  [item: number]: string //대괄호 인덱스 시그니처 배열데이터의 타입을 지정 배열의 index를 item number로 지정하고 각각의 값은 string으로 지정
+}
+const fruits: Fruits = ['apple', 'banana', "cherry"]
+console.log(fruits[1])
+
+//객체
+interface User3 {
+  [key: string]: unknown
+  name: string
+  age: number
+}
+const heropy3: User3 = {
+  name:"heropy",
+  age: 85
+}
+//user3의 대괄호의 인덱스 시그니처로 인하여 하기의 값들이 heropy3에 할당 될 수 있음 인덱스 시그니처가 없으면 heropy3는 user3에서 지정한 name과 age만 가질 수 있게 됨
+heropy3["isValid"] = true
+heropy3["emails"] = ['thescon@gmail.com', 'test@gmail.com']
+console.log(heropy3)
+
+
+interface Payload {
+  [key: string]: unknown //어떤값이 올지 모름 
+}
+function logValues (payload : Payload) {
+  for (const key in payload) { //for in은 키값 다룰 수 있음
+    console.log(payload[key]) //[key]로 인덱싱
+  }
+}
+
+interface User4 {
+  [key: string]: unknown
+  name: string
+  age: number
+  isValid: boolean
+}
+const heropy4: User4 = {
+  name: "heropy",
+  age:85,
+  isValid: true
+}
+//heropy4는 User4와 문제가 없으나 logVaules의 매개변수로 사용될 경우 Payload의 인덱싱 가능한 부분이 없으므로 에러가 발생하게 된다. 따라서 User4에 인덱싱 가능한 부분을 추가하여 해결 한다.
+logValues(heropy4)
+
+// interface의 확장 js의 상속
+
+interface UserA {
+  name: string
+  age: number
+}
+interface UserB extends UserA {
+  isValid:boolean
+}
+const heropy5: UserA = {
+  name: "Heropy",
+  age:85,
+  //isValid: true //isValid 없음
+}
+const neoo: UserB = {
+  name: "neo",
+  age: 102,
+  isValid: true
+}
+
+interface FullName {
+  firstName: string
+  lastName: string
+}
+interface FullName {
+  middleName: string
+  lastName: string //boolean //후속에선 선행에서 지정된 타입이 이어져야 함 인터페이스는 동일한 이름으로 작성 가능 중복되는 부분에는 주의가 필요
+}
+const fullName: FullName = {
+  firstName: "tomas",
+  middleName: "sea",
+  lastName: "connel"
+}
+
+//타입 별칭(Alias) 타입의 별도 이름(별명)
+
+type TypeA = string
+type TypeB = string |number | boolean
+type User7 = {
+  name: string
+  age: number
+  isValid: boolean
+} | [string, number, boolean] //객체로 지정하거나 배열(tuple type)으로 지정할수 있는 User7이라는 새로운 타입을 만들어 냄
+
+const userC: User7 = {
+  name: "neo",
+  age:85,
+  isValid:true
+}
+
+const userD: User7 = ['evan', 36, false]  //User7의 tuple type
+
+function someFunc(param: TypeB): TypeA {
+  switch (typeof param) { //switch구문 typeof param에 따라 각각의 식을 return
+    case "string":
+      return param.toUpperCase()
+    case "number":
+      return param.toFixed(2) //return 값은 TypeA때문에 결국은 string임 그러므로 에러발생 X
+    default:
+      return "boolean!" //true //boolean 자체를 string에 할당 할 수 없기에 오류가 발생한다.
+  }
+}
+
+//타입별칭은 interface를 대신해 사용 할 수도 있음
+
+type TypeUser = { //interface와 다르게 할당 연산자가 추가로 필요
+  name: string
+  age: number
+  isValid: boolean
+}
+interface InterfaceUser{
+  name: string
+  age: number
+  isValid: boolean
+}
+
+//기능적인 차이는 없고 굳이 권장을 하자면 interface방식을 권장
+//type의 용도는 사용범위가 interface보다 넓음 특별히 문제되는 건 아니므로 취향에 맞게 사용
+
+const camel: TypeUser = {
+  name: "camel",
+  age: 85,
+  isValid: true
+}
+
+// 함수 - 명시적 this
+
+interface Cat {
+  name: string
+  age: number
+}
+const cat: Cat = {
+  name: "고양이",
+  age: 3
+}
+function hellohello(this: Cat, message: string) { //일반함수이므로 this는 호출되는 위치에서 정의 됨
+//this가 암시적으로 any로 할당되는 것을 피하기 위해 this가 interface Cat에 해당하는 타입임을 명확히 함 => 매개변수로 보이지만 매개변수가 아니라 타입을 지정해주는 ts만의 문법이라고 봐야 함 (명시적 this)
+  console.log(`hello ${this.name}, ${message}`)
+}
+//call 메소드의 경우 함수나 메소드 뒤에서 바로 사용하여 어떤 대상에서 실행될지 정할 수 있음 (실행대상, 실행 내용)
+//cat의 객체 데이터에서 조회하여 name을 리턴 함
+//this에는 암시적으로 any가 할당 되는데 이 경우 ts에서 주의해야하므로 this의 타입을 정의해 주어야 함
+hellohello.call(cat, "you are cool") 
+
+
+
+//함수 오버로딩
+
+//1) 타입이 2개의 경우 두개의 함수를 만들어야 함 => 오버로딩으로 해결
+function addA (a: string, b: string) {
+  return a + b
+}
+function addB (a: number, b: number) {
+  return a + b
+}
+addA ("hello", "world")
+addB (1, 2)
+//addA ("hello", 2)
+//addB ("hello", 2)
+
+//2) js와 달리 타입이 명확하여 오버로드 과정을 거쳐야 함
+function addC (a: string, b: string): string //타입선언
+function addC (a: number, b: number): number //타입선언
+function addC (a: any, b: any) { //함수 구현
+  return a + b 
+}
+addC ("hello", "world")
+addC (1, 2)
+//addC ("hello", 2) //첫째 타입이 string이면 두번재 인수 타입도 동일해야 오버로드 가능
+//addC (2, "hello")
+
+//클래스
+//w접근제어자 access modifiers
+// public 어디서나 자유롭게 접근 가능, 클래스 바디에서 생략 가능 - js환경과 같음
+// protected 나(userAA)와 파생된 후손 클래스(userBB, userCC) 내에서만 접근 가능 클래스 안쪽에서만 사용하기 위해 - 
+// private 나의 클래스에서만 접근
+// protected는 매소드에도 사용 할 수 있다.
+//매개변수에서 접근제어자는 public도 생략 할 수 없다.
+
+
+
+class UserAA {
+  constructor (
+    public first: string = '', 
+    public last: string = '', 
+    public age: number = 0
+    ){ //this.이하 들 즉, class의 바디에 해당하는 부분들은 앞에서 정의 되어야 함
+    this.first = first
+    this.last = last
+    this.age = age
+  }
+  getAge() {
+    return `${this.first} ${this.last} is ${this.age}`
+  }
+}
+class UserBB extends UserAA {
+  getAge() {
+    return `${this.first} ${this.last} is ${this.age}` //private 접근 불가
+  }
+}
+
+class UserCC extends UserBB {
+  getAge() {
+    return `${this.first} ${this.last} is ${this.age}` //private 접근 불가
+  }
+}
+
+const neoA = new UserAA ('neo', 'anderson', 102) //protected의 경우 접근 불가
+console.log(neoA.first)
+console.log(neoA.last)
+console.log(neoA.age) 
+
 
 

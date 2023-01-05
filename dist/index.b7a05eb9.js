@@ -656,6 +656,144 @@ const heropy2 = {
 };
 //getName의 this 정의 됨 그러므로 this는 heropy라는 객체데이터가 됨
 heropy2.getName("Hello");
+const fruits = [
+    "apple",
+    "banana",
+    "cherry"
+];
+console.log(fruits[1]);
+const heropy3 = {
+    name: "heropy",
+    age: 85
+};
+//user3의 대괄호의 인덱스 시그니처로 인하여 하기의 값들이 heropy3에 할당 될 수 있음 인덱스 시그니처가 없으면 heropy3는 user3에서 지정한 name과 age만 가질 수 있게 됨
+heropy3["isValid"] = true;
+heropy3["emails"] = [
+    "thescon@gmail.com",
+    "test@gmail.com"
+];
+console.log(heropy3);
+function logValues(payload) {
+    for(const key in payload)console.log(payload[key]) //[key]로 인덱싱
+    ;
+}
+const heropy4 = {
+    name: "heropy",
+    age: 85,
+    isValid: true
+};
+//heropy4는 User4와 문제가 없으나 logVaules의 매개변수로 사용될 경우 Payload의 인덱싱 가능한 부분이 없으므로 에러가 발생하게 된다. 따라서 User4에 인덱싱 가능한 부분을 추가하여 해결 한다.
+logValues(heropy4);
+const heropy5 = {
+    name: "Heropy",
+    age: 85
+};
+const neoo = {
+    name: "neo",
+    age: 102,
+    isValid: true
+};
+const fullName = {
+    firstName: "tomas",
+    middleName: "sea",
+    lastName: "connel"
+};
+const userC = {
+    name: "neo",
+    age: 85,
+    isValid: true
+};
+const userD = [
+    "evan",
+    36,
+    false
+] //User7의 tuple type
+;
+function someFunc(param) {
+    switch(typeof param){
+        case "string":
+            return param.toUpperCase();
+        case "number":
+            return param.toFixed(2) //return 값은 TypeA때문에 결국은 string임 그러므로 에러발생 X
+            ;
+        default:
+            return "boolean!" //true //boolean 자체를 string에 할당 할 수 없기에 오류가 발생한다.
+            ;
+    }
+}
+//기능적인 차이는 없고 굳이 권장을 하자면 interface방식을 권장
+//type의 용도는 사용범위가 interface보다 넓음 특별히 문제되는 건 아니므로 취향에 맞게 사용
+const camel = {
+    name: "camel",
+    age: 85,
+    isValid: true
+};
+const cat = {
+    name: "고양이",
+    age: 3
+};
+function hellohello(message) {
+    //this가 암시적으로 any로 할당되는 것을 피하기 위해 this가 interface Cat에 해당하는 타입임을 명확히 함 => 매개변수로 보이지만 매개변수가 아니라 타입을 지정해주는 ts만의 문법이라고 봐야 함 (명시적 this)
+    console.log(`hello ${this.name}, ${message}`);
+}
+//call 메소드의 경우 함수나 메소드 뒤에서 바로 사용하여 어떤 대상에서 실행될지 정할 수 있음 (실행대상, 실행 내용)
+//cat의 객체 데이터에서 조회하여 name을 리턴 함
+//this에는 암시적으로 any가 할당 되는데 이 경우 ts에서 주의해야하므로 this의 타입을 정의해 주어야 함
+hellohello.call(cat, "you are cool");
+//함수 오버로딩
+//1) 타입이 2개의 경우 두개의 함수를 만들어야 함 => 오버로딩으로 해결
+function addA(a, b) {
+    return a + b;
+}
+function addB(a, b) {
+    return a + b;
+}
+addA("hello", "world");
+addB(1, 2);
+function addC(a, b) {
+    return a + b;
+}
+addC("hello", "world");
+addC(1, 2);
+//addC ("hello", 2) //첫째 타입이 string이면 두번재 인수 타입도 동일해야 오버로드 가능
+//addC (2, "hello")
+//클래스
+//w접근제어자 access modifiers
+// public 어디서나 자유롭게 접근 가능, 클래스 바디에서 생략 가능 - js환경과 같음
+// protected 나(userAA)와 파생된 후손 클래스(userBB, userCC) 내에서만 접근 가능 클래스 안쪽에서만 사용하기 위해 - 
+// private 나의 클래스에서만 접근
+// protected는 매소드에도 사용 할 수 있다.
+//매개변수에서 접근제어자는 public도 생략 할 수 없다.
+class UserAA {
+    constructor(first, last, age){
+        this.first = first;
+        this.last = last;
+        this.age = age;
+        this.first = first;
+        this.last = last;
+        this.age = age;
+    }
+    getAge() {
+        return `${this.first} ${this.last} is ${this.age}`;
+    }
+}
+class UserBB extends UserAA {
+    getAge() {
+        return `${this.first} ${this.last} is ${this.age}` //private 접근 불가
+        ;
+    }
+}
+class UserCC extends UserBB {
+    getAge() {
+        return `${this.first} ${this.last} is ${this.age}` //private 접근 불가
+        ;
+    }
+}
+const neoA = new UserAA("neo", "anderson", 102) //protected의 경우 접근 불가
+;
+console.log(neoA.first);
+console.log(neoA.last);
+console.log(neoA.age);
 
 },{}]},["84Rv8","jeorp"], "jeorp", "parcelRequireb6db")
 
