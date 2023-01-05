@@ -765,7 +765,7 @@ addC(1, 2);
 // protected는 매소드에도 사용 할 수 있다.
 //매개변수에서 접근제어자는 public도 생략 할 수 없다.
 class UserAA {
-    constructor(first, last, age){
+    constructor(first = "", last = "", age = 0){
         this.first = first;
         this.last = last;
         this.age = age;
