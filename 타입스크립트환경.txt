@@ -1,0 +1,17 @@
+npm i -D parcel typescript (개발 의존성 패키지)
+
+"scripts" 이하
+package.json의
+
+진입점 
+test -> dev : "parcel ./index.html
+"build" : "parcel build ./index.html"
+"main":"index.js" 현재 프로젝트에서는 필요하지 않으므로 제거
+
+타입스크립트는 html에서 실행되지 못하므로
+parcel이 컴파일하여 dist 생성함
+
+tsconfig.json 추가 작성
+esModuleInterop ESM과 Commonjs 
+
+파슬 번들러가 js로 컴파일해줌 -> dist 폴더의 index.html은 ts로 연결된 것이 아니라 js로 연결되어 있음
