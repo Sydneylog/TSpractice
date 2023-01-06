@@ -83,9 +83,9 @@ getValue(3.14159, true) //3.14
 //1)의 경우는 실제 존재하지 않을 수 있음
 //하기와 같이 타입 가드를 사용하여 조건문으로 문제를 해결함
 const elem = document.querySelector(".title")
- if (elem) {
+  if (elem) {
   elem.textContent = "hello"
- } 
+  } 
 
 //2)의 경우
 function getNumber2(x: number | null | undefined) {
@@ -413,5 +413,37 @@ console.log(neoA.first)
 console.log(neoA.last)
 console.log(neoA.age) 
 
+
+//제네릭 문법
+//함수 클래스 인터페이스에서 사용 
+
+
+
+//1) 함수
+interface Obj {
+  x: number
+}
+type Arr = [number, number] //tuple type
+
+//함수 제네릭 구현을 위해 오버로드 부분을 지움 
+// function toArray(a: string, b: string): string[]
+// function toArray(a: Number, b: number): number[]
+// function toArray(a: boolean, b: boolean): boolean[]
+// function toArray(a: Obj, b: Obj): Obj[]
+// function toArray(a: Arr, b: Arr): Arr[]
+
+//이하 꺽쇄 안의 T는 일종의 매개 변수로 타입 정보를 저장하고 있다
+function toArray<T>(a: T, b: T) {
+  return [a, b]
+}
+
+console.log(
+  //toArray<string>('neo', 123), //오버로드와 같이 제네릭 문법에서도 첫번째 인자로 인하여 이후의 인자들의 타입도 정해지게 됨 (string, number) 불가
+  toArray('neo', '123'), // 명식적으로 <string>을 써 놓아도 좋지만 ts가 추론하게끔 첫번째 인자에 해당 타입을 지정하면 이후는 알아서 계산함 but ts가 추론하게끔 하는게 ts 본질에 맞음
+  toArray(1, 2),
+  toArray(true, false),
+  toArray({x: 1}, {y: 2}), // 두번째 인자의 변수를 y로 바꿀 시 첫번째 인자는 속성을 x만 가지고 있음 따라서 toArray의 T는 x에대한 타입만 가지고 있는데 두번째 인자에서 y속성을 취하게 되면 동일한 타입인지 확인 할 수 없음 (타입추론)
+  toArray([1, 2], [3, 4])
+)
 
 
