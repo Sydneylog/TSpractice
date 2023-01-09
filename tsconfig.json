@@ -1,16 +1,37 @@
+
+
+
 {
+  //컴파일러 옵션지정 - 타입스크립을 자바스크립으로 변환하기위해 사용 되는 옵션들
   "compilerOptions": {
+    // 컴파일 될 es(js) 버전 명시 ES2015 권장 (되도록 년도 방식이 좋음)
     "target": "ES2015",
+    // 모듈 시스템 지정 -CommonJS, AMD, ESNext/ CommonJS는 node에서 os제어시
     "module": "ESNext",
+    // 모듈 해석 방식 지정 Node , classic
     "moduleResolution": "Node",
+    //esm 모듈 방식 호환성 활성화 여부 - node.js에서는 common 방식 ->common.js파일을 dts로 변환후 main.ts 에서 /// reference path 로 직접 가져와야 함
     "esModuleInterop": true,
+    // 모든 파일을 모듈로 컴파일, true의 경우 import 혹은 export 키워드 필수
+    // 보통은 모듈로 작업하기에 특별한 경우가 아니면 true가 좋음
+    "isolatedModules":false,
+    //src에 해당 하는 파일 경로 지정할 경우
+    //"baseUrl":"../",
+    //컴파일러가 참조할 타입선언 (d.ts)의 경로를 지정
+    //"typeRoots":["./node_modules/@types"],
+    //컴파일에 사용할 라이브러리 지정
     "lib": ["ESNext", "DOM"],
-    "strict": true
+    "strict": true,
+   
   },
+  //컴파일 할 파일 경로 목록
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "lodash.d.ts"  
   ],
+  //컴파일에서 제외할 파일 경로 목록
   "exclude": [
     "node_modules"
   ]
 }
+

@@ -151,3 +151,41 @@ const heropy: User & Validation = {
   age: 85,
   isValid: true
 }
+
+npm은 지속적으로 쓸것
+npmx는 해당 프로젝트에만 사용할것
+
+GUI CLI(command line)
+
+cli 방식으로 사용시 vue create 폴더명
+or
+vue create . 현재폴더
+package.json에서 어떠한 프로그램 사용했는지 확인 할 수 있음
+
+app.vue가 메인페이지 (주요코딩)
+main.js에서 교통정리하고\
+public의 index.html에서 유저 사용 환경 확인해봐야
+
+퍼블릭의 index.html은 build를 사용하여 dist 폴더가 생성되면
+해당 폴더를 호스팅
+
+cli 환경에서 미리보기는
+npm run dev
+
+
+vue 내비게이션과 라우터
+
+주요기능
+중첩된 route/view mapping  //nested
+모듈화된 컴포넌트 기반의 라우터 설정
+라우터 파라미터 쿼리 와일드카드
+vue의 trasition sys 를 이용한 트랜지션 효과
+세밀한 fine-grained 네비게이션 컨트롤
+active css 클래스를 자동으로 추가해주는 링크 //active
+html5 히스토리모드 도는 hash 모드 //histpry
+auto-fallback in IE9
+vue router 에서 default는 hash 모드
+사용자 정의 가능한 스크롤 동작
+
+
+

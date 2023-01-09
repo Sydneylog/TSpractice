@@ -283,7 +283,7 @@ type User7 = {
   name: string
   age: number
   isValid: boolean
-} | [string, number, boolean] //객체로 지정하거나 배열(tuple type)으로 지정할수 있는 User7이라는 새로운 타입을 만들어 냄
+} | [string, number, boolean] //객체로 지정하거나 배열(tuple type)으로 지정할수 있는 User7이라는 새로운 타입을 만들어 냄 typle type 길이와 값이 고정된 배열
 
 const userC: User7 = {
   name: "neo",
@@ -416,6 +416,7 @@ console.log(neoA.age)
 
 //제네릭 문법
 //함수 클래스 인터페이스에서 사용 
+//제네릭은 타입을 함수의 파라미터 처럼 사용하는 것을 말함
 
 
 
@@ -443,7 +444,131 @@ console.log(
   toArray(1, 2),
   toArray(true, false),
   toArray({x: 1}, {y: 2}), // 두번째 인자의 변수를 y로 바꿀 시 첫번째 인자는 속성을 x만 가지고 있음 따라서 toArray의 T는 x에대한 타입만 가지고 있는데 두번째 인자에서 y속성을 취하게 되면 동일한 타입인지 확인 할 수 없음 (타입추론)
-  toArray([1, 2], [3, 4])
+  toArray<Arr>([1, 2], [3, 4]) // =>의도는 tuple type으로 [a, b] 각각의 값이 숫자이며 2개인 배열 but ([1, 2, 3])에서도 오류를 발생시키지 않음(다른 예과 같이 추론으로는 안 됨) generic의 타입을 명시하지 않았기에 타입추론은 일반 배열 타입으로 인식하게 됨
 )
 
+//제네릭
+//클래스
 
+// class User {
+//   public payload
+//   constructor (payload) {
+//     this.payload = payload
+//   }  => 해당 부분은 이하로 정리 가능 or
+// class User{
+//   constructor(public payload) {}
+//   getPayload() {
+//     return this.payload
+//   }
+// } or
+class UserI<P> {
+  constructor (public payload: P) {}
+    getPayload() {
+      return this.payload
+    }
+} 
+
+
+interface UserAType {
+  name: string
+  age: number
+  isValid: boolean
+}
+interface UserBType {
+  name: string
+  age: number
+  emails: string[]
+}
+
+//userAtype 인터페이스 적용 => 매개변수 UserAtype 이 전달되어 Teropy는 user a타입의 인터페이스 타입 가지게 됨 따라서 emails에서 오류 발생
+const Teropy = new UserI<UserAType>({
+  name: "teropy",
+  age: 85 ,
+  isValid: true,
+  //emails:[] //?!
+})
+
+//user b type 인터페이스 적용 시킬 경우 name과 emails 존재하나 age 없으므로 에러 발생하여 추가해 주어야 함
+const neoD = new UserI<UserBType>({
+  name:"neo",
+  age: 12,//?!
+  emails: ["noe@gmail.com"]  
+})
+
+//interface - generic
+//인터페이스 제약조건 (constraint)
+
+//인터페이스의 타입변수에 제약 추가
+//클래스의 확장, 상속에 extends 사용 하듯이 union 타입으로 작성 => 에러 발생
+interface MyData<T extends string | number[]> {
+  name: string
+  value: T
+}
+//할당연산자 객체데이터 할당
+const dataA: MyData<string> = {
+  name: "Data A",
+  value: "hello world"
+}
+// const dataB: MyData<number> = {
+//   name: "Data B",
+//   value: 1234
+// }
+// const dataC: MyData<boolean> = {
+//   name: "data C",
+//   value: true
+// }
+const dataD: MyData<number[]> = {
+  name:"data D",
+  value: [1, 2, 3, 4]
+}
+
+
+//타입스크립트 모듈
+//lodash 패키지 설치 npm i lodash
+//lodash는 js로 작성되어져 있는데 ts형식이 아니므로 불러 올 수 없음 //package.json에서 확인후 node_module에서 lodash 폴더 찾은후 거기서 package.json파일 찾은 후 main: 보면 lodash.js로 되어 있음.. =>.d.ts 파일 생성
+
+//dts파일의 이름을 lodas가 아닌 임의의 이름으로 할 경우
+//삼중 슬래시 지시자(triple-slash directive)-참조태그를 활용하여 따로 연결해 주어야 함(ts)
+//<reference path="./main.d.ts" />
+
+import _ from 'lodash'
+
+const str = "the brwon fox jumps over the lazy dog"
+
+console.log(_.camelCase(str))
+console.log(_.snakeCase(str))
+console.log(_.kebabCase(str))
+
+// 이처럼 js 파일은 dts파일을 통해 불러와야 함
+//DefinitelyTyped 에서 js의 타입 확인
+//npm install --serve-dev @types/모듈이름 으로 기존 패키지를 ts로 설치 할 수 있음
+// npm info @types/lodash 를 통해 사용하고자 하는 ts 패키지가 존재하는지 확인
+// npm i @types/lodash -d 개발 의존성 패키지로 설치
+
+//tsconfig.json의 compilerOptions의 typeRoots에 기본값으로 설정되어 있어 우리가 설치하는 lodash를 불러 들일 수 있음
+// "typeRoots":[
+//   "./node_modules/@types"
+// ]
+
+import { getFullName, UserD } from './user'
+
+const peropy: UserD = {
+  firstName: "peropy",
+  lastName: "park",
+  age: 25,
+  isValid: true
+}
+//first와 last name이 없으므로 에러 발생
+const foollName = getFullName(peropy)
+
+console.log(foollName)
+console.log(peropy.isValid)
+
+
+//import { name } from './store/index' //하지만 index 생략 가능
+import { name } from './store'
+console.log(name)
+
+///<reference path="./common.d.ts" />
+import * as commonjs from './common' //common.js에서 타입이 선언되지 않았기에 에러 발생 //esModuleInterop가 false일 경우 import * as commonjs 처럼 commonjs변수에 모두 할당하여 해결 할 수도 있음(기본 내기 방법처럼 사용 할 수 있음) => esModuleInterop 가 true인 경우에도 commonjs에 대한 접근에 문제가 없게 되므로 esm commonjs 방식이 섞여있을 경우 이러한 작성이 필요함
+console.log(commonjs)
